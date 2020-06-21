@@ -137,6 +137,8 @@ class View:
 
             messagebox.showinfo("Finished!", "Clustering finished successfully")
 
+            sys.exit()
+
         except Exception as err:
             print(err)
             return
