@@ -13,6 +13,8 @@ class ViewController:
         self.proc_data = None
 
     def pre_process(self, path):
+        """ Pre process the data in the data file in path and prepare it for clustering"""
+
         self.data = pd.read_excel(path)
         if len(self.data.index) == 0:
             raise ValueError("The given data is empty")
@@ -21,11 +23,15 @@ class ViewController:
         self.path = path
 
     def cluster(self, n_clusters=8, n_init=10):
+        """ Build and run a KNearest model to cluster pre processed data"""
+
         self.k_means = cluster_k_means(self.proc_data.drop('country', axis=1), n_clusters, n_init)
         self.proc_data['cluster'] = self.k_means.labels_
         return self.get_graphs(self.k_means)
 
     def get_graphs(self, k_means):
+        """ Build scatter and choropleth graph from the predictions made by the KMeans model """
+
         # First graph prep
         fig, ax = plt.subplots()
         sc = ax.scatter(self.proc_data['Social support'].values, self.proc_data['Generosity'].values, c=k_means.labels_.astype(np.float), edgecolor='k')

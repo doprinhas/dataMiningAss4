@@ -23,10 +23,10 @@ class View:
         self.browse_btn = Button(master, text="Browse", command=self.file_dialog)
 
         self.num_of_clusters_ent = Entry(master, validate="key", validatecommand=(vcmd, '%P'))
-        self.num_of_clusters_lbl = Label(master, text="Number Of Clusters: ")
+        self.num_of_clusters_lbl = Label(master, text="Number of clusters k: ")
 
         self.num_of_iterations_ent = Entry(master, validate="key", validatecommand=(vcmd, '%P'))
-        self.num_of_iterations_lbl = Label(master, text="Number Of Iterations: ")
+        self.num_of_iterations_lbl = Label(master, text="Number of runs: ")
 
         self.pre_process_btn = Button(master, text="Pre-process", command=self.pre_process)
         self.cluster_btn = Button(master, text="Cluster", command=self.cluster)
@@ -62,7 +62,6 @@ class View:
         self.pre_process_btn.grid(column=3, row=5, padx=5, pady=5)
         self.cluster_btn.grid(column=4, row=5, padx=5, pady=5)
 
-
     def validate(self, new_text):
         if not new_text:  # the field is being cleared
             self.entered_number = 0
@@ -86,6 +85,7 @@ class View:
         self.entry.delete(0, END)
 
     def file_dialog(self):
+        """ Fle explorer configuration"""
         self.filename = filedialog.askopenfilename(initialdir="/", title="Select A File", filetype= \
             [("Excel file", "*.xlsx")])
         self.browse_ent.config(state=NORMAL)
@@ -94,6 +94,7 @@ class View:
         self.browse_ent.config(state=DISABLED)
 
     def pre_process(self):
+        """ Pre process the data in the data file in filename path and prepare it for clustering"""
         try:
             if self.filename == '':
                 messagebox.showerror("Error", "Path to data is invalid")
@@ -109,6 +110,7 @@ class View:
             return
 
     def cluster(self):
+        """ Build and run a KNearest model to cluster pre processed data"""
         try:
             if self.controller.proc_data is None:
                 messagebox.showerror("Error!", "Data is not processed")
