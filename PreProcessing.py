@@ -2,7 +2,7 @@ import numpy as np
 from sklearn.preprocessing import StandardScaler
 
 
-def fill_nan(data):
+def fill_numeric_nan(data):
     """ Fills NaN values in the given data with their column mean value"""
 
     for var in data.select_dtypes(include=np.number).columns:
@@ -28,7 +28,7 @@ def group_by(data, col_title):
 def pre_processing(data, group_by_col):
     """ Pre process the data in the data file in filename path and prepare it for clustering"""
 
-    data = fill_nan(data)
+    data = fill_numeric_nan(data)
     data = standardization(data)
     return group_by(data, group_by_col)
 

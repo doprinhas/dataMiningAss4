@@ -31,23 +31,6 @@ class View:
         self.pre_process_btn = Button(master, text="Pre-process", command=self.pre_process)
         self.cluster_btn = Button(master, text="Cluster", command=self.cluster)
 
-        # self.num_of_clusters = Entry()
-        # self.total = 0
-        # self.entered_number = 0
-        #
-        # self.total_label_text = IntVar()
-        # self.total_label_text.set(self.total)
-        # self.total_label = Label(master, textvariable=self.total_label_text)
-        #
-        # self.label = Label(master, text="Total:")
-        #
-        # vcmd = master.register(self.validate) # we have to wrap the command
-        # self.entry = Entry(master, validate="key", validatecommand=(vcmd, '%P'))
-        #
-        # self.add_button = Button(master, text="+", command=lambda: self.update("add"))
-        # self.subtract_button = Button(master, text="-", command=lambda: self.update("subtract"))
-        # self.reset_button = Button(master, text="Reset", command=lambda: self.update("reset"))
-
         # LAYOUT
 
         self.browse_btn.grid(column=2, row=2, padx=5, pady=5)
@@ -73,17 +56,6 @@ class View:
         except ValueError:
             return False
 
-    def update(self, method):
-        if method == "add":
-            self.total += self.entered_number
-        elif method == "subtract":
-            self.total -= self.entered_number
-        else:  # reset
-            self.total = 0
-
-        self.total_label_text.set(self.total)
-        self.entry.delete(0, END)
-
     def file_dialog(self):
         """ Fle explorer configuration"""
         self.filename = filedialog.askopenfilename(initialdir="/", title="Select A File", filetype= \
@@ -97,7 +69,7 @@ class View:
         """ Pre process the data in the data file in filename path and prepare it for clustering"""
         try:
             if self.filename == '':
-                messagebox.showerror("Error", "Path to data is invalid")
+                messagebox.showerror("Error", "Please choose a file first")
                 return
 
             self.controller.pre_process(self.filename)
@@ -106,7 +78,7 @@ class View:
             messagebox.showerror('Error!', str(err))
             return
         except Exception as err:
-            print(err)
+            messagebox.showerror('Error!', 'There was a problem with the given file... \nPlease check the file again')
             return
 
     def cluster(self):
@@ -126,7 +98,8 @@ class View:
             if iterations_num < 1 or iterations_num > 100:
                 messagebox.showerror('Error!', 'The number of iterations is not valid')
 
-            graphs = self.controller.cluster(clusters_num, iterations_num)
+            k_means = self.controller.cluster(clusters_num, iterations_num)
+            graphs = self.controller.get_graphs(k_means)
 
             self.master.geometry("1280x700")
 
