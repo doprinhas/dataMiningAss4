@@ -11,6 +11,9 @@ class ViewController:
 
     def __init__(self):
         self.proc_data = None
+        self.data = None
+        self.k_means = None
+        self.path = None
 
     def pre_process(self, path):
         self.data = pd.read_excel(path)
@@ -23,7 +26,7 @@ class ViewController:
     def cluster(self, n_clusters=8, n_init=10):
         self.k_means = cluster_k_means(self.proc_data.drop('country', axis=1), n_clusters, n_init)
         self.proc_data['cluster'] = self.k_means.labels_
-        return self.get_graphs(self.k_means)
+        return self.k_means
 
     def get_graphs(self, k_means):
         # First graph prep
@@ -43,7 +46,8 @@ class ViewController:
         countries_data = pd.read_csv('countries_codes.csv')
         countries_dict = dict([(country, code) for country, code in
                                zip(countries_data['Country'].to_numpy(), countries_data['Alpha-3code'].to_numpy())])
-        self.proc_data['country id'] = [countries_dict[x] if x in countries_dict else x for x in self.proc_data['country'].values]
+        self.proc_data['country id'] = \
+            [countries_dict[x] if x in countries_dict else x for x in self.proc_data['country'].values]
 
         choro_map = plex.choropleth(self.proc_data, locations="country id", color="cluster",
                                   color_continuous_scale=plex.colors.sequential.Aggrnyl,
@@ -84,18 +88,3 @@ class ViewController:
     @k_means.setter
     def k_means(self, k_means):
         self.__k_means = k_means
-
-
-# controller = ViewController()
-# controller.pre_process('Dataset.xlsx')
-# controller.cluster(2)
-# data = controller.proc_data
-# data = pd.read_excel('Dataset.xlsx')
-# data = pre_processing(data, group_by_col='country')
-# data = data.drop(['year'], axis=1)
-#
-# kmeans = cluster_k_means(data.drop('country', axis=1), 8, 10)
-# data['cluster'] = kmeans.labels_
-#
-# print(data.shape)
-# print(data)
