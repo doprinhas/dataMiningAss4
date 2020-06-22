@@ -46,6 +46,7 @@ class View:
         self.cluster_btn.grid(column=4, row=5, padx=5, pady=5)
 
     def validate(self, new_text):
+        """ This method validates that the text box input is only numbers """
         if not new_text:  # the field is being cleared
             self.entered_number = 0
             return True
